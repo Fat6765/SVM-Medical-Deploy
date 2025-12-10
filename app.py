@@ -9,10 +9,11 @@ import os
 
 warnings.filterwarnings('ignore')
 # === VÉRIFICATION DU CHEMIN DES MODÈLES UPLOADÉS ===
-if not os.path.exists('models/saved_models/all_results.pkl'):
+if not os.path.exists('models/saved_models/all_results.pkl'): # <-- Le chemin est rétabli
     st.error("ERREUR CRITIQUE : Le fichier de résultats 'all_results.pkl' est introuvable.")
-    st.info("Cause probable : Le chemin 'models/saved_models/' n'a pas été respecté lors de l'upload sur GitHub.")
+    st.info("Vérifiez la structure de votre dépôt : le fichier doit être dans models/saved_models/")
     st.stop()
+# =============================================
 # =============================================
 # =============================================
 # CONFIGURATION
@@ -121,18 +122,18 @@ st.markdown("""
 @st.cache_data
 def load_results():
     try:
-        # CORRECTION : On cherche directement à la racine
-        with open('all_results.pkl', 'rb') as f:
+        # Chemin rétabli vers le DOSSIER
+        with open('models/saved_models/all_results.pkl', 'rb') as f:
             return pickle.load(f)
     except FileNotFoundError:
         st.error("ERREUR CRITIQUE : Le fichier de résultats 'all_results.pkl' est introuvable.")
-        st.info("Vérifiez que ce fichier se trouve bien à la racine de votre dépôt GitHub.")
+        st.info("Vérifiez la structure de votre dépôt : le fichier doit être dans models/saved_models/")
         st.stop()
 
 @st.cache_resource
 def load_model(dataset, kernel):
-    # CORRECTION : On cherche à la racine (juste le nom du fichier)
-    path = f'{dataset}_{kernel}_model.pkl' 
+    # Chemin rétabli vers le DOSSIER
+    path = f'models/saved_models/{dataset}_{kernel}_model.pkl'
     if os.path.exists(path):
         with open(path, 'rb') as f:
             return pickle.load(f)
@@ -511,4 +512,5 @@ st.markdown("""
 </div>
 
 """, unsafe_allow_html=True)
+
 
